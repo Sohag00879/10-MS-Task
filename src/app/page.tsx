@@ -1,103 +1,166 @@
-import Image from "next/image";
+import Link from "next/link"
+import type { Metadata } from "next"
+import { CourseHeader } from "@/components/course-header"
+import { CourseHero } from "@/components/course-hero"
+import { CourseInstructors } from "@/components/course-instructors"
+import { CourseFeatures } from "@/components/course-features"
+import { CoursePointers } from "@/components/course-pointers"
+import { CourseExclusiveFeatures } from "@/components/course-exclusive-features"
+import { CourseDetails } from "@/components/course-details"
+import { CourseChecklist } from "@/components/course-checklist"
+import { CourseFAQ } from "@/components/course-faq"
+import getCourseData from "@/hooks/getCourseData"
+import stripHtml from "@/hooks/stripHtml"
 
-export default function Home() {
+
+
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { lang?: string }
+}): Promise<Metadata> {
+  const lang = searchParams.lang || "en"
+  const data = await getCourseData(lang)
+
+
+  if (!data) {
+    return {
+      title: "Course Landing Page",
+      description: "A professional landing page for an online course.",
+    }
+  }
+
+
+  const descriptionText = stripHtml(data.description)
+  const thumbnailUrl = data.media.find((m) => m.name === "thumbnail")?.resource_value || "/placeholder.svg"
+
+
+  return {
+    title: data.title,
+    description: descriptionText,
+    openGraph: {
+      title: data.title,
+      description: descriptionText,
+      images: [{ url: thumbnailUrl }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.title,
+      description: descriptionText,
+      images: [thumbnailUrl],
+    },
+  }
+}
+
+
+export default async function CourseLandingPage({
+  searchParams,
+}: {
+  searchParams: { lang?: string }
+}) {
+  const lang = searchParams.lang || "bn"
+  const data = await getCourseData(lang)
+
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-red-50 text-red-700">
+        <p>Failed to load course data. Please try again later.</p>
+      </div>
+    )
+  }
+
+
+  const youtubeTrailer = data.media.find((m) => m.resource_type === "video" && m.name === "preview_gallery")
+  const youtubeVideoId = youtubeTrailer ? youtubeTrailer.resource_value : "dQw4w9WgXcQ"
+
+
+  const instructors = data.sections.find((s) => s.type === "instructors")?.values || []
+  const features = data.sections.find((s) => s.type === "features")?.values || []
+  const pointers = data.sections.find((s) => s.type === "pointers")?.values || []
+  const featureExplanations = data.sections.find((s) => s.type === "feature_explanations")?.values || []
+  const aboutSections = data.sections.find((s) => s.type === "about")?.values || []
+  const checklist = data.checklist || []
+  const faqItems = data.sections.find((s) => s.type === "faq")?.values || []
+
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-lime-50 text-gray-800">
+      <CourseHeader title={data.title} currentLang={lang} />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+
+      <main className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
+        <CourseHero
+          title={data.title}
+          description={data.description}
+          youtubeVideoId={youtubeVideoId}
+          ctaText={data.cta_text.name}
+        />
+
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mt-10">
+          {/* Left Column for main content sections and FAQ */}
+          <div className="lg:col-span-2 space-y-8">
+            <CourseInstructors
+              instructors={instructors}
+              sectionTitle={data.sections.find((s) => s.type === "instructors")?.name || "Course Instructors"}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <CourseFeatures
+              features={features}
+              sectionTitle={data.sections.find((s) => s.type === "features")?.name || "How the course is laid out"}
+            />
+            <CoursePointers
+              pointers={pointers}
+              sectionTitle={
+                data.sections.find((s) => s.type === "pointers")?.name || "What you will learn by doing the course"
+              }
+            />
+            <CourseExclusiveFeatures
+              featureExplanations={featureExplanations}
+              sectionTitle={
+                data.sections.find((s) => s.type === "feature_explanations")?.name || "Course Exclusive Feature"
+              }
+            />
+            <CourseDetails
+              aboutSections={aboutSections}
+              sectionTitle={data.sections.find((s) => s.type === "about")?.name || "Course Details"}
+            />
+            <CourseFAQ
+              faqItems={faqItems}
+              sectionTitle={data.sections.find((s) => s.type === "faq")?.name || "Frequently Asked Questions"}
+            />
+          </div>
+
+
+          {/* Right Column - now sticky */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-20 space-y-10">
+              <CourseChecklist
+                checklist={checklist}
+                sectionTitle={data.sections.find((s) => s.type === "checklist")?.name || "Course Highlights"}
+              />
+            </div>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-8 mt-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm">&copy; {new Date().getFullYear()} IELTS Course. All rights reserved.</p>
+          <nav className="mt-4 space-x-4">
+            <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Privacy Policy
+            </Link>
+            <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Terms of Service
+            </Link>
+          </nav>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
