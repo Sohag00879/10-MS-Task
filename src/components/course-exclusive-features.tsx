@@ -1,10 +1,10 @@
 "use client"
-import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle2 } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { motion } from "framer-motion"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { SectionValue } from "@/lib/types"
+import { motion } from "framer-motion"
+import { CheckCircle2 } from "lucide-react"
+import Image from "next/image"
 
 interface CourseExclusiveFeaturesProps {
   featureExplanations: SectionValue[]
@@ -15,8 +15,8 @@ export function CourseExclusiveFeatures({ featureExplanations, sectionTitle }: C
   if (!featureExplanations || featureExplanations.length === 0) return null
 
   return (
-    <AnimatedSection className="space-y-6">
-      <h2 className="text-3xl font-bold text-green-700 border-b-2 border-lime-400 pb-2">{sectionTitle}</h2>
+    <AnimatedSection className="space-y-6 mt-16">
+      <h2 className="text-3xl font-bold text-black border-b-2 border-green-500 pb-2">{sectionTitle}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {featureExplanations.map((feature, index) => (
           <motion.div
@@ -26,9 +26,12 @@ export function CourseExclusiveFeatures({ featureExplanations, sectionTitle }: C
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
           >
-            <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl">
+            <Card className="p-6 shadow-md hover:shadow-lg transition-shadow duration-300 bg-white rounded-xl h-[530px] flex flex-col">
               <CardHeader className="p-0 mb-4">
-                <CardTitle className="text-xl font-semibold text-lime-600 mb-2">{feature.title}</CardTitle>
+                <CardTitle className="text-xl font-semibold text-green-500 mb-2">
+                  {feature.title}
+                </CardTitle>
+
                 {feature.file_url && (
                   <Image
                     src={feature.file_url || "/placeholder.svg"}
@@ -39,7 +42,8 @@ export function CourseExclusiveFeatures({ featureExplanations, sectionTitle }: C
                   />
                 )}
               </CardHeader>
-              <CardContent className="p-0">
+
+              <CardContent className="p-0 flex-grow">
                 <ul className="space-y-2 text-gray-700 list-none pl-0">
                   {feature.checklist?.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2">
@@ -50,6 +54,8 @@ export function CourseExclusiveFeatures({ featureExplanations, sectionTitle }: C
                 </ul>
               </CardContent>
             </Card>
+
+
           </motion.div>
         ))}
       </div>

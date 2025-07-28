@@ -1,8 +1,8 @@
 "use client"
-import { CheckCircle2 } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { motion } from "framer-motion"
 import type { SectionValue } from "@/lib/types"
+import { motion } from "framer-motion"
+import { CheckCircle2 } from "lucide-react"
 
 interface CoursePointersProps {
   pointers: SectionValue[]
@@ -13,8 +13,8 @@ export function CoursePointers({ pointers, sectionTitle }: CoursePointersProps) 
   if (!pointers || pointers.length === 0) return null
 
   return (
-    <AnimatedSection id="learn" className="space-y-6">
-      <h2 className="text-3xl font-bold text-green-700 border-b-2 border-lime-400 pb-2">{sectionTitle}</h2>
+    <AnimatedSection id="learn" className="space-y-6 mt-16">
+      <h2 className="text-3xl font-bold text-black border-b-2 border-green-500 pb-2">{sectionTitle}</h2>
       <ul className="space-y-4 text-lg text-gray-700 list-none pl-0">
         {pointers.map((pointer, index) => (
           <motion.li

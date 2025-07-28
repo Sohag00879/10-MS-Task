@@ -8,10 +8,7 @@ interface AnimatedSectionProps {
   delay?: number
 }
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-}
+
 
 export function AnimatedSection({ children, className, delay = 0.2 }: AnimatedSectionProps) {
   return (

@@ -1,36 +1,39 @@
-import type { CourseData as CourseDataType, ApiResponse as ApiResponseDataType } from "@/lib/types"
-const API_BASE_URL = "https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course"
+import type {
+  ApiResponse as ApiResponseDataType,
+  CourseData as CourseDataType,
+} from "@/lib/types";
+const API_BASE_URL =
+  "https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course";
 
-
-
-export default async function getCourseData(lang = "en"): Promise<CourseDataType | null> {
+export default async function getCourseData(
+  lang = "en"
+): Promise<CourseDataType | null> {
   try {
     const response = await fetch(`${API_BASE_URL}?lang=${lang}`, {
       headers: {
-        "X-TENMS-SOURCE-PLATFORM": "web", // Required for SEO data
+        "X-TENMS-SOURCE-PLATFORM": "web",
       },
       next: {
-        revalidate: 3600, // ISR: Revalidate data every hour
+        revalidate: 3600,
       },
-    })
-
+    });
 
     if (!response.ok) {
-      console.error(`Failed to fetch data: ${response.status} ${response.statusText}`)
-      return null
+      console.error(
+        `Failed to fetch data: ${response.status} ${response.statusText}`
+      );
+      return null;
     }
 
-
-    const apiResponse: ApiResponseDataType = await response.json()
+    const apiResponse: ApiResponseDataType = await response.json();
     if (apiResponse.code !== 200) {
-      console.error("API returned an error:", apiResponse.message)
-      return null
+      console.error("API returned an error:", apiResponse.message);
+      return null;
     }
 
-
-    return apiResponse.data
+    return apiResponse.data;
   } catch (error) {
-    console.error("Error fetching course data:", error)
-    return null
+    console.error("Error fetching course data:", error);
+    return null;
   }
 }

@@ -1,22 +1,22 @@
 "use client"
-import Link from "next/link"
-import { PlayCircle } from "lucide-react"
-import { AnimatedButton } from "@/components/ui/animated-button"
-import { useRouter, useSearchParams } from "next/navigation" // Import useRouter and useSearchParams
+import { AnimatedButton } from "@/components/ui/animated-button";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import logo from "../../public/10mslogo-svg.svg";
 
 interface CourseHeaderProps {
-  title: string
   currentLang: string
 }
 
-export function CourseHeader({ title, currentLang }: CourseHeaderProps) {
+export function CourseHeader({ currentLang }: CourseHeaderProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const handleLanguageChange = (lang: string) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("lang", lang)
-     localStorage.setItem('lang', lang);
+    localStorage.setItem('lang', lang);
     router.push(`?${params.toString()}`)
   }
 
@@ -27,8 +27,7 @@ export function CourseHeader({ title, currentLang }: CourseHeaderProps) {
           href="#"
           className="flex items-center gap-2 text-lg font-bold text-green-700 hover:text-green-900 transition-colors"
         >
-          <PlayCircle className="w-6 h-6" />
-          <span>{title.split(" ")[0]} Course</span>
+          <Image src={logo} alt="logo" className="w-18 h-10" />
         </Link>
         <nav className="hidden md:flex items-center space-x-6">
           <Link href="#overview" className="text-sm font-medium text-gray-600 hover:text-green-700 transition-colors">
@@ -44,13 +43,10 @@ export function CourseHeader({ title, currentLang }: CourseHeaderProps) {
             Features
           </Link>
           <Link href="#learn" className="text-sm font-medium text-gray-600 hover:text-green-700 transition-colors">
-            What You'll Learn
+            What You will Learn
           </Link>
           <Link href="#details" className="text-sm font-medium text-gray-600 hover:text-green-700 transition-colors">
             Details
-          </Link>
-          <Link href="#faq" className="text-sm font-medium text-gray-600 hover:text-green-700 transition-colors">
-            FAQ
           </Link>
         </nav>
         <div className="flex items-center gap-4">

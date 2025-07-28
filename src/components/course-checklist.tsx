@@ -1,13 +1,13 @@
 "use client"
-import Image from "next/image"
-import { CheckCircle2 } from "lucide-react"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { motion } from "framer-motion"
 import type { ChecklistItem } from "@/lib/types"
+import { motion } from "framer-motion"
+import { CheckCircle2 } from "lucide-react"
+import Image from "next/image"
 
 interface CourseChecklistProps {
   checklist: ChecklistItem[]
-  
+
   sectionTitle: string
 }
 
@@ -15,11 +15,11 @@ export function CourseChecklist({ checklist, sectionTitle }: CourseChecklistProp
   if (!checklist || checklist.length === 0) return null
 
   return (
-    <AnimatedSection className="space-y-6">
-      <h2 className="text-2xl font-bold text-green-700">{sectionTitle}</h2>
+    <AnimatedSection className="space-y-6 border p-6 rounded-lg bg-white">
+      <h2 className="text-2xl font-bold text-black">{sectionTitle}</h2>
       <ul className="space-y-4">
         {checklist
-          .filter((item) => item.list_page_visibility)
+          // .filter((item) => item.list_page_visibility)
           .map((item, index) => (
             <motion.li
               key={index}
@@ -35,7 +35,7 @@ export function CourseChecklist({ checklist, sectionTitle }: CourseChecklistProp
                   alt="Checklist icon"
                   width={32}
                   height={32}
-                  className="w-8 h-8 object-contain flex-shrink-0"
+                  className="w-6 h-6 object-contain flex-shrink-0"
                 />
               ) : (
                 <CheckCircle2 className="w-8 h-8 text-green-500 flex-shrink-0" />

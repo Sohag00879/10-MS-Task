@@ -1,28 +1,24 @@
-import Link from "next/link"
-import type { Metadata } from "next"
+import { CourseChecklist } from "@/components/course-checklist"
+import { CourseDetails } from "@/components/course-details"
+import { CourseExclusiveFeatures } from "@/components/course-exclusive-features"
+import { CourseFeatures } from "@/components/course-features"
 import { CourseHeader } from "@/components/course-header"
 import { CourseHero } from "@/components/course-hero"
 import { CourseInstructors } from "@/components/course-instructors"
-import { CourseFeatures } from "@/components/course-features"
 import { CoursePointers } from "@/components/course-pointers"
-import { CourseExclusiveFeatures } from "@/components/course-exclusive-features"
-import { CourseDetails } from "@/components/course-details"
-import { CourseChecklist } from "@/components/course-checklist"
-import { CourseFAQ } from "@/components/course-faq"
 import getCourseData from "@/hooks/getCourseData"
 import stripHtml from "@/hooks/stripHtml"
-
-
-
+import type { Metadata } from "next"
+import Link from "next/link"
 
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: { lang?: string }
+  searchParams: Promise<{ lang?: string }>
 }): Promise<Metadata> {
-  const lang = searchParams.lang || "en"
+  const resolvedSearchParams = await searchParams
+  const lang = resolvedSearchParams.lang || "en"
   const data = await getCourseData(lang)
-
 
   if (!data) {
     return {
@@ -31,10 +27,8 @@ export async function generateMetadata({
     }
   }
 
-
   const descriptionText = stripHtml(data.description)
   const thumbnailUrl = data.media.find((m) => m.name === "thumbnail")?.resource_value || "/placeholder.svg"
-
 
   return {
     title: data.title,
@@ -54,15 +48,14 @@ export async function generateMetadata({
   }
 }
 
-
 export default async function CourseLandingPage({
   searchParams,
 }: {
-  searchParams: { lang?: string }
+  searchParams: Promise<{ lang?: string }>
 }) {
-  const lang = searchParams.lang || "bn"
+  const resolvedSearchParams = await searchParams
+  const lang = resolvedSearchParams.lang || "bn"
   const data = await getCourseData(lang)
-
 
   if (!data) {
     return (
@@ -72,36 +65,20 @@ export default async function CourseLandingPage({
     )
   }
 
-
-  const youtubeTrailer = data.media.find((m) => m.resource_type === "video" && m.name === "preview_gallery")
-  const youtubeVideoId = youtubeTrailer ? youtubeTrailer.resource_value : "dQw4w9WgXcQ"
-
-
+  const media = data.media
   const instructors = data.sections.find((s) => s.type === "instructors")?.values || []
   const features = data.sections.find((s) => s.type === "features")?.values || []
   const pointers = data.sections.find((s) => s.type === "pointers")?.values || []
   const featureExplanations = data.sections.find((s) => s.type === "feature_explanations")?.values || []
   const aboutSections = data.sections.find((s) => s.type === "about")?.values || []
   const checklist = data.checklist || []
-  const faqItems = data.sections.find((s) => s.type === "faq")?.values || []
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-lime-50 text-gray-800">
-      <CourseHeader title={data.title} currentLang={lang} />
-
-
+      <CourseHeader currentLang={lang} />
       <main className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
-        <CourseHero
-          title={data.title}
-          description={data.description}
-          youtubeVideoId={youtubeVideoId}
-          ctaText={data.cta_text.name}
-        />
-
-
+        <CourseHero title={data.title} description={data.description} media={media} ctaText={data.cta_text.name} />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mt-10">
-          {/* Left Column for main content sections and FAQ */}
           <div className="lg:col-span-2 space-y-8">
             <CourseInstructors
               instructors={instructors}
@@ -127,30 +104,18 @@ export default async function CourseLandingPage({
               aboutSections={aboutSections}
               sectionTitle={data.sections.find((s) => s.type === "about")?.name || "Course Details"}
             />
-            <CourseFAQ
-              faqItems={faqItems}
-              sectionTitle={data.sections.find((s) => s.type === "faq")?.name || "Frequently Asked Questions"}
-            />
           </div>
-
-
-          {/* Right Column - now sticky */}
           <div className="lg:col-span-1">
             <div className="sticky top-20 space-y-10">
-              <CourseChecklist
-                checklist={checklist}
-                sectionTitle={data.sections.find((s) => s.type === "checklist")?.name || "Course Highlights"}
-              />
+              <CourseChecklist checklist={checklist} sectionTitle={"এই কোর্সে যা যা থাকছে"} />
             </div>
           </div>
         </div>
       </main>
-
-
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-8 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-sm">&copy; {new Date().getFullYear()} IELTS Course. All rights reserved.</p>
+          <p className="text-sm">&copy; {new Date().getFullYear()} 10 Minute School. All rights reserved.</p>
           <nav className="mt-4 space-x-4">
             <Link href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
               Privacy Policy
