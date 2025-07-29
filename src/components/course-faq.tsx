@@ -1,8 +1,8 @@
 "use client"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { AnimatedSection } from "@/components/ui/animated-section"
-import { motion } from "framer-motion"
 import type { SectionValue } from "@/lib/types"
+import { motion } from "framer-motion"
 
 interface CourseFAQProps {
   faqItems: SectionValue[]
@@ -13,7 +13,7 @@ export function CourseFAQ({ faqItems, sectionTitle }: CourseFAQProps) {
   if (!faqItems || faqItems.length === 0) return null
 
   return (
-    <AnimatedSection id="faq" className="space-y-6">
+    <AnimatedSection className="space-y-6">
       <h2 className="text-3xl font-bold text-green-700 border-b-2 border-lime-400 pb-2">{sectionTitle}</h2>
       <Accordion type="single" collapsible className="w-full">
         {faqItems.map((item, index) => (

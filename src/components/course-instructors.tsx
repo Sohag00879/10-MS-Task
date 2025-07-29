@@ -14,7 +14,7 @@ export function CourseInstructors({ instructors, sectionTitle }: CourseInstructo
   if (!instructors || instructors.length === 0) return null
 
   return (
-    <AnimatedSection id="instructors" className="space-y-6">
+    <AnimatedSection className="space-y-6">
       <h2 className="text-3xl font-bold text-black border-b-2 border-green-500 pb-2">{sectionTitle}</h2>
       <div className="w-full max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

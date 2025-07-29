@@ -6,17 +6,11 @@ import { Card, CardTitle } from "@/components/ui/card"
 import { motion } from "framer-motion"
 import { MediaCarousel } from "./meda-carousel"
 
-interface MediaItem {
-  name: string
-  resource_type: "video" | "image"
-  resource_value: string
-  thumbnail_url?: string
-}
-
 interface CourseHeroProps {
   title: string
   description: string
-  media: MediaItem[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  media: any
   ctaText: string
   price?: string
 }
@@ -27,7 +21,7 @@ export function CourseHero({ title, description, media, ctaText, price = "1000 B
       {/* Left Column */}
       <div className="lg:col-span-2 space-y-8">
         {/* Title & Description */}
-        <AnimatedSection id="overview" className="space-y-4">
+        <AnimatedSection className="space-y-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

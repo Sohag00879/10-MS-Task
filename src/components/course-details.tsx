@@ -13,7 +13,7 @@ export function CourseDetails({ aboutSections, sectionTitle }: CourseDetailsProp
   if (!aboutSections || aboutSections.length === 0) return null
 
   return (
-    <AnimatedSection id="details" className="space-y-6 mt-16">
+    <AnimatedSection className="space-y-6 mt-16">
       <h2 className="text-3xl font-bold text-black border-b-2 border-green-500 pb-2">
         {sectionTitle}
       </h2>
