@@ -31,24 +31,24 @@ A high-performance, SEO-optimized Course Landing Page built with **Next.js**, **
 
 How to Clone and Run Locally
 1. Clone the Repository
-bash
-Copy
-Edit
+
 git clone https://github.com/your-username/nextjs-course-project.git
+
 cd nextjs-course-project
+
 🔁 Replace your-username and repo name accordingly.
 
-2. Install Dependencies
+
+3. Install Dependencies
+   
 Using npm:
 
-bash
-npm install
-Or using yarn:
 
-bash
-yarn install
+npm install
+
+
 3. Start Development Server
-bash
+
 npm run dev
 Then open http://localhost:3000 in your browser.
 
